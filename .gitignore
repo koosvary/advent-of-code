@@ -1,5 +1,5 @@
 .venv*
 .vscode*
 2023
-*\screenshots
-*\input.txt
+**/screenshots
+**/input.txt
