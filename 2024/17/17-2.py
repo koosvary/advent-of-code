@@ -1,3 +1,4 @@
+originalRegisters = {}
 registers = {}
 operands = []
 
@@ -13,7 +14,7 @@ def getComboOperandValue(operand):
         case _:
             # 7 is 'reserved'
             raise Exception('bruh')
-            
+             
 def runOperand(opcode, operand = None):
     global pointer
     pointer += 2
@@ -63,8 +64,37 @@ with open('2024/17/input.txt') as f:
 print(registers)
 print(operands)
 
-while pointer < len(operands):
-    runOperand(operands[pointer], operands[pointer+1])
-print(registers)
+originalRegisters = registers.copy()
 
-print(','.join(str(out) for out in outs))
+def isSubarrayAtEnd(arr, sub):
+    # Check if the subarray is identical to the end of the array
+    return arr[-len(sub):] == sub
+
+patternMatches = [0]
+numberFound = False
+
+while not numberFound:
+    currentMatch = patternMatches[0]
+    valueBin = format(currentMatch, 'o')
+    for i in range(8):
+        testValue = int(str(valueBin) + str(i), 8)
+        
+        registers['A'] = testValue
+        while pointer < len(operands):
+            runOperand(operands[pointer], operands[pointer+1])
+
+        if isSubarrayAtEnd(operands, outs):
+            patternMatches.append(testValue)
+            print(f'{testValue}: {valueBin} {outs}')
+
+        if outs == operands:
+            print(f'Your lucky number is: {testValue}')
+            print(','.join(str(out) for out in outs))
+            numberFound = True
+            break
+
+        registers = originalRegisters.copy()
+        outs = []
+        pointer = 0
+        testValue += 1
+    del patternMatches[0]
