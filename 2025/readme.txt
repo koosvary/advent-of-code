@@ -1,1 +1,1 @@
-Written in Go for learning a new language
+Written in Go to learn a new language
